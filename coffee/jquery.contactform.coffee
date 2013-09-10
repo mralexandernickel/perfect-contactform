@@ -29,7 +29,7 @@ methods =
       try
         methods.init_mandrill()
         methods.init_recaptcha()
-        methods.bind_submit()
+        methods.bind_submit_handler()
         methods.set_button_states()
       catch error
         console.log error
@@ -69,7 +69,7 @@ methods =
       "data-sent-text": config.button_sent_text
   
   # bind the forms submit event
-  bind_submit: ->
+  bind_submit_handler: ->
     config.form_el.submit (e) ->
       # prevent form from sending
       e.preventDefault()
