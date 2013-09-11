@@ -89,7 +89,7 @@ methods =
       config.btn_submit = $("#btn_send_contactform")
       config.btn_submit.click (e) ->
         e.preventDefault()
-        methods.send_contactform()
+        methods.verify_recaptcha()
       
       # load recaptcha
       Recaptcha.create recaptcha_pubkey,
@@ -125,9 +125,9 @@ methods =
     $("#modal_recaptcha").modal "hide"
   
   #
-  # verify recaptcha and send form
+  # verify recaptcha
   #
-  send_contactform: ->
+  verify_recaptcha: ->
     # bring submit button into sending state
     config.btn_submit.button "sending"
     
@@ -140,35 +140,41 @@ methods =
     $.post config.recaptcha_verification_url, recaptcha_params, (response) ->
       # recaptcha is correct...
       if response is 1
-        # close the modal
-        methods.close_modal()
-        # set mandrill params
-        mandrill_params =
-          message:
-            from_email: $("#input_email").val()
-            from_name: $("#input_name").val()
-            to: config.recipients
-            subject: $("#input_subject").val()
-            text: $("#input_message").val()
-        
-        # send the message
-        m.messages.send mandrill_params, (res) ->
-          console.log res if console?
-          # output message
-          
-          # set button into sent state
-          config.btn_submit.button "sent"
-          
-          # reload recaptcha
-          Recaptcha.reload()
-          
-          # reset the form
-          config.form_el[0].reset()
-        , (err) ->
-          console.log err if console?
-      # recaptcha is wrong...
+        methods.send_contactform()
+      # recaptcha is wrong
       else
         console.log "the recaptcha solution is wrong" if console?
+  
+  #
+  # verify recaptcha and send form
+  #
+  send_contactform: ->
+    # set mandrill params
+    mandrill_params =
+      message:
+        from_email: $("#input_email").val()
+        from_name: $("#input_name").val()
+        to: config.recipients
+        subject: $("#input_subject").val()
+        text: $("#input_message").val()
+    
+    # send the message
+    m.messages.send mandrill_params, (res) ->
+      console.log res if console?
+      # close the modal
+      methods.close_modal()
+      # output message
+      
+      # set button into sent state
+      config.btn_submit.button "sent"
+      
+      # reload recaptcha
+      Recaptcha.reload()
+      
+      # reset the form
+      config.form_el[0].reset()
+    , (err) ->
+      console.log err if console?
   
   #
   # bind the forms submit event
