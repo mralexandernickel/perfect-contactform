@@ -74,7 +74,7 @@ methods =
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btn_send_contactform">#{config.button_text}</button>
+                <button type="button" class="btn btn-primary" id="btn_send_contactform" data-dismiss="modal">#{config.button_text}</button>
               </div>
             </div>
           </div>
