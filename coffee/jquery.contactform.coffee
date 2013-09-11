@@ -74,7 +74,7 @@ methods =
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btn_send_contactform" data-dismiss="modal">#{config.button_text}</button>
+                <button type="button" class="btn btn-primary" id="btn_send_contactform">#{config.button_text}</button>
               </div>
             </div>
           </div>
@@ -117,6 +117,13 @@ methods =
   open_modal: ->
     $("#modal_recaptcha").modal "show"
   
+  
+  #
+  # close the modal
+  #
+  close_modal: ->
+    $("#modal_recaptcha").modal "hide"
+  
   #
   # verify recaptcha and send form
   #
@@ -133,6 +140,8 @@ methods =
     $.post config.recaptcha_verification_url, recaptcha_params, (response) ->
       # recaptcha is correct...
       if response is 1
+        # close the modal
+        methods.close_modal()
         # set mandrill params
         mandrill_params =
           message:
