@@ -129,8 +129,9 @@ methods =
       recaptcha_response_field: Recaptcha.get_response()
       recaptcha_challenge_field: Recaptcha.get_challenge()
     
-    # check recaptcha
+    # verify recaptcha
     $.post config.recaptcha_verification_url, recaptcha_params, (response) ->
+      # recaptcha is correct...
       if response is 1
         # set mandrill params
         mandrill_params =
@@ -156,6 +157,7 @@ methods =
           config.form_el[0].reset()
         , (err) ->
           console.log err if console?
+      # recaptcha is wrong...
       else
         console.log "the recaptcha solution is wrong" if console?
   
